@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 const userSchema= new Schema(
     {
         username:{
-            type:string,
+            type:String,
             required:true,
             unique:true,
             lowercase:true,
@@ -13,35 +13,35 @@ const userSchema= new Schema(
             index:true
         },
         email:{
-            type:string,
+            type:String,
             required:true,
             unique:true,
             lowercase:true,
             trim:true
         },
         fullname:{
-            type:string,
+            type:String,
             required:true,
             trim:true,
             index:true
         },
         avtar:{
-            type:string,// cloudinary url
+            type:String,// cloudinary url
             required:true,
         },
         coverImage:{
-            type:string,// cloudinary url
+            type:String,// cloudinary url
         },
         watchHistory:{
-            type:Schema.type.ObjectId,
+            type:Schema.Types.ObjectId,
             ref:"vedio"
         },
         password:{
-            type:string,
+            type:String,
             required:[true,"password is required"]
         },
         refreshToken:{
-            type:string
+            type:String
 
         }
     }
@@ -51,7 +51,7 @@ const userSchema= new Schema(
 userSchema.pre("save",async function(next){
     if(this.isModified("password")) return next();
 
-    this.passsword=bcrypt.hash(this.password,10)
+    this.passsword= await bcrypt.hash(this.password,10)
     next()
 })
 
@@ -94,4 +94,4 @@ userSchema.methods.generateRefreshToken=function(){
 
 
 
-export const user=mongoose.model("user",userSchema)
+export const User=mongoose.model("user",userSchema)
