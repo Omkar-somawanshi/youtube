@@ -1,13 +1,13 @@
-import { upload } from "../middlewares/multer.middleware.js";
 import express from "express";
-import { registerUser} from "../controllers/user.controllers.js";
-import {loginuser} from "../controllers/user.controllers.js"
-import { logoutUser } from "../controllers/user.controllers.js";
+import { upload } from "../middlewares/multer.middleware.js";
+import { registerUser, loginUser, logoutUser, refreshAccessToken} from "../controllers/user.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-
 const router = express.Router();
-router.post("/register",
+
+// Registration Route with File Upload
+router.post(
+  "/register",
   upload.fields([
     { name: "avatar", maxCount: 1 },
     { name: "coverImage", maxCount: 1 },
@@ -15,8 +15,9 @@ router.post("/register",
   registerUser
 );
 
-router.route("/login").post(loginuser)
-//secured route
-router.route("/logout").post(verifyJWT,  logoutUser)
+// Authentication Routes
+router.post("/login", loginUser);
+router.post("/logout", verifyJWT, logoutUser);
+router.route("/refresh-token").post(refreshAccessToken)
 
 export default router;
